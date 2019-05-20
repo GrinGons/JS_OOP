@@ -1,1 +1,46 @@
+<html>
+	<head>
+		<title>CallbackTime Interval</title>
+		<script language="JavaScript" type="text/JavaScript">
 
+		var count = 0;
+		var timers = [];
+		
+		var log = (function (outputFunc) {
+			
+			var callerLog = [];
+			
+			return function(input){
+
+				count ++ ;
+				callerLog.push(input);
+				var dateT = new Date().toString();
+
+				if (count < 11){ 
+					var output = count + " " + callerLog[count - 1] + " " + dateT + "<br>";
+					outputFunc(output);
+
+				} else { 
+					for (var i = 0; i < timers.length; i++) {
+							clearInterval(timers[i]);
+						}
+						outputFunc("<br>Logging Stopped");
+				}
+			};
+			
+        })(printFunc);
+
+		function printFunc(output) {
+			document.write(output);
+		}
+		
+		function startMeUp() {
+			timers.push(setInterval("log('Timer1')", 500));
+			timers.push(setInterval("log('Timer2')", 700));
+			timers.push(setInterval("log('Timer3')", 1000));
+		}
+		</script>
+	</head>
+	<body onload="startMeUp();">
+	</body>
+</html>
