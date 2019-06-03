@@ -1,0 +1,116 @@
+<html>
+	<head>
+		<title>Kunho_Lab2</title>
+		<style type="text/css">
+	        body {
+	            background-color: rgb(242, 255, 230);
+	        }
+
+	        .Button { 
+	            height: 25px;
+	            font-family: Arial, Helvetica;
+	            font-size: 11pt;
+				border: 1px solid rgb(153, 153, 102); 
+				color: white;
+				background-color: rgb(153, 153, 102); 
+	        }
+	        .TxtBox {	
+	            font-family: Verdana, Arial, Helvetica;
+	            font-size: 10pt;
+	            position: absolute;
+			    width: 150px;
+			    left: 100px;
+	            background-color: white; /*Pink*/
+				border: 1px solid rgb(153, 153, 102); 
+			}
+			.SelType {
+				font-family: Verdana, Arial, Helvetica;
+				font-size: 10pt;
+				position: absolute;
+			    width: 50px;
+			    left: 100px;
+				border: 1px solid rgb(153, 153, 102);
+				color: black;
+				background-color: white; 
+			}
+
+	    </style>
+		<script language="JavaScript" type="text/JavaScript">
+				
+			function init() {
+				var provArray=["ON", "QC", "NS", "NB", "MB", "BC", "PE", "SK", "AB", "NL"];
+				for (var i = 0; i < provArray.length; i++) 
+					{document.getElementById("listProv").options[i] = new Option(provArray[i]);
+				}
+			}
+
+			function changeProv() {
+				var checkB = document.getElementById("myCheck");
+			    var txtAl = document.getElementById("txtAlert");
+				var ref = document.getElementById("listProv");
+				var listP = ref.options[ref.selectedIndex].text;
+
+			    if (checkB.checked == true && listP !== "ON"){
+			        txtAl.style.display = "block";
+			        document.getElementById("myCheck").checked = false;
+			    } else {
+			       txtAl.style.display = "none";
+			    }
+			}
+			
+			function checkMember() {
+				var checkB = document.getElementById("myCheck");
+			    var txtAl = document.getElementById("txtAlert");
+				var ref = document.getElementById("listProv");
+				var listP = ref.options[ref.selectedIndex].text;
+
+			    if (checkB.checked == true && listP !== "ON"){
+			        txtAlt.style.display = "block";
+			        document.getElementById("myCheck").checked = false;
+			    } else {
+			       txtAl.style.display = "none";
+			    }
+			}
+
+			function checkPink(){
+			var listText = ["fName", "lName", "txtAddress", "txtCity", "txtPost", "txtTele"];
+			 
+			for(var i=0; i<listText.length; i++){
+				if( document.getElementById(listText[i]).value == ""){
+					document.getElementById(listText[i]).style.backgroundColor = "pink";
+					alert("Some of the field data is missing");
+				} else {
+					document.getElementById(listText[i]).style.backgroundColor = "white";
+				}
+			}
+		}
+		</script>
+	</head>
+	<body onload="init();">
+		<div>First name <input type="text" id="fName" class="TxtBox" pattern="[A-Za-z]{,50}" title="alphabetic only – max 50 char" value="Enter your first name" />
+	    </div>
+		<br />
+
+		<div>Last name <input type="text" id="lName" class="TxtBox"  pattern="[A-Za-z]{,50}" title="alphabetic only – max 50 char" value="Enter your last name" /></div>
+		<br />
+
+		<div>Address <input type="text" id="txtAddress" class="TxtBox"  pattern="[^a-zA-Z0-9]{,50}" title="alphanumeric only – max 50 char" value="" /></div>
+		<br />
+
+		<div>City <input type="text" id="txtCity" class="TxtBox"  pattern="[^a-zA-Z0-9]{,40}" title="alphanumeric only – max 40 char" value="" /></div>
+		<br />
+
+	    <div>Province <select id="listProv" class="SelType" onchange="changeProv();"></select></div>
+	    <br />
+
+	    <div>Postal Code <input type="text" id="txtPost" class="TxtBox" pattern="[^a-zA-Z0-9]{,7}" title="alphanumeric only – max 7 char" value="" /></div>
+	    <br />
+
+	    <div>Telephone <input type="text" id="txtTele" class="TxtBox" pattern="/^([a-zA-Z0-9]){1,20}$/" title="alphanumeric with hyphens – max 12 chars" value="" /></div>
+	    <br />
+	    <div>Is Member? <input type="checkbox" id="myCheck" onclick="checkMember();"/><div id="txtAlert" style="display:none"> Only 'Ontario' Customers are able to be Members!</div></div>
+		<br />
+	    <input type="Button" class="Button" value="Submit" onclick="checkPink();"/>
+	    <br />
+	</body>
+</html> 	

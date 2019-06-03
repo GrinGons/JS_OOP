@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Kunho_prof</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+
+    <style type="text/css">
+        body { background-color: rgb(239, 241, 247); }
+        .Buttons { position: absolute; height: 25px; font-family: Arial, Helvetica; font-size: 11pt; color: #002594; }
+        .LblInfoGray { font-family: Verdana, Arial, Helvetica; font-size: 10pt; color: #5a5a5a; position: relative; text-align: left; padding-top: 4px; }
+        .TableClass { font-family: Verdana, Arial, Helvetica; font-size: 9.0pt; }
+        .BaseColumn { text-align: center; }
+        .AlphaColumn { width: 40px; cursor: pointer; background-color: #C3DAF9; border: 1px solid #002d96; }
+    </style>
+
+    <script language="JavaScript" type="text/javascript">
+            var rows = 20; var columns = 10;
+            var lastCell = null;    //document.getElementByI
+            function $gel(id) {return document.getElementById(id); } 
+
+            var isIE11 = ((window.navigator.userAgent).indexOf("Trident") !== -1);
+            var isChrome = ((window.navigator.userAgent).indexOf("Chrome") !== -1);
+            
+        window.onload = function() {   // ************* ON **************
+            $gel("SpreadsheetTable").innerHTML = buildTable(rows, columns);
+            // refreshTable();
+        }
+
+        function buildTable(rows, columns) {
+            var divHTML = "<table border='1' cellpadding='0' cellspacing='0' class='TableClass'>";
+            divHTML += "<tr><th></th>";
+
+            for (var j=0; j < columns; j++)
+                divHTML += "<th>" + String.fromCharCode(j + 65) + "</th>"; divHTML += "</tr>";
+
+            for (var i = 1; i <= rows; i++) { 
+                divHTML += "<tr>"; divHTML += "<td id='" + i + "_0' class='BaseColumn'>" + i + "</td>";
+                for (var j = 1; j <= columns; j++) divHTML += "<td id='" + i+"_"+j + "' class='AlphaColumn' onclick='selectCell(this)'></td>"; divHTML += "</tr>"; 
+            }
+
+            divHTML += "</table>";
+            return divHTML;
+        }
+
+        function selectCell(ref) {             
+			var rcArray = ref.id.split("_");
+                
+			if (lastCell != null){
+				lastCell.style.backgroundColor = "#C3DAF9";
+            }
+			ref.style.backgroundColor = "white";  /*#F8CDFE*/ 
+			lastCell = ref;     alert(lastCell[c]);
+            
+			$gel("txtRows").value = ref.innerHTML;
+			$gel("txtRows").focus();
+			$gel("txtRows").select();
+        } 
+
+        function updateArray() {
+			if (lastCell === null)
+				return;
+			var rcArray = lastCell.id.split("_");
+			if (rcArray[1] === "0") {
+				lastCell.innerHTML = $gel("txtRows").value;
+			} else {
+				var r = parseInt(rcArray[0]) - 1;
+				var c = parseInt(rcArray[1]) - 1;
+				lastCell.innerHTML = parseInt($gel("txtRows").value);
+				// refreshTable();
+            } 
+        } 
+        function filter() { filterSet = "0123456789=sumSUM-";
+                if (window.event.keyCode === 13) {
+                    updateArray(); 
+                    } if (isIE11) { if (window.event.keyCode === 13) { updateArray();
+				}
+				else if (!nCharOK(window.event.keyCode)){
+                    window.event.preventDefault(); 
+
+                    alert("Only numerics and 'sum' are allowed");}
+                } else { 
+                    if (!nCharOK(window.event.keyCode))
+                    window.event.returnValue = null; } 
+                    
+        }
+                
+        function nCharOK(c) { var ch = (String.fromCharCode(c));  
+                if (filterSet.indexOf(ch) !== -1) { return true; 
+                } else{ return false; } 
+        }
+
+        function sumfunc() {  
+            if($gel("txtRows").value = "=sum"){
+                for (var r = 0; r < rcArray[r].length-1; r++) {
+                        var rSum = 0;
+                        var cSum = 0;
+                        var id = "";
+                        
+                    for (var c = 0; c < rcArray[c].length - 1; c++) {
+                        id = r + "_" + c ;
+                        $gel(id).innerHTML = rcArray[r][c];
+                        rSum += rcArray[0][c];      //alert(rSum);
+                        cSum += rcArray[r][0];
+                    }   if(rcArray[r]=== 0){
+                            id  = (r) + "_" + (rcArray[r].length); 
+                            $gel(id).innerHTML = rSum; } 
+                        else if(rcArray[c]===0){
+                            id  = (r) + "_" + (rcArray[c].length); 
+                            $gel(id).innerHTML = rSum; } 
+                } } }
+
+        function saveAll(){
+            for (var i=0; i < rows.length; i++) {
+				for (var j=0; j < columns.length; j++){
+
+                if($gel(i+"_"+j).value !== ""){
+                    var id = i+"_"+j;
+                    localStorage.setItem(id, $gel(i+"_"+j).value);
+                    } } } 
+                    var rcV = $gel("txtRows").value;
+            localStorage.setItem(window.location.href,"true");
+            localStorage.setItem("txtRows", $gel("txtRows").value );
+        }
+
+        function clearAll() {
+            for (var i=0; i < rows.length; i++) {
+				for (var j=0; j < columns.length; j++){
+                if(localStorage.getItem(i+"_"+j) === "text"){
+                    localStorage.removeItem(i+"_"+j);
+                    } } }
+                if($gel("txtRows").value !== ""){
+                    localStorage.removeItem("txtRows");
+            } }
+
+        function loadAll(){
+            for (var i=0; i < rows.length; i++) {
+				for (var j=0; j < columns.length; j++){
+                if(localStorage.getItem(i+"_"+j) === "text"){
+                    $gel(i+"_"+j).value = localStorage.getItem(i+"_"+j);
+                    } } }
+            $gel("txtRows").value = localStorage.getItem("txtRows");
+        }
+    </script>
+</head>
+<body>
+        <br />
+        <input type="text" id="txtRows" value="" onkeypress="filter();"/>
+        <input id="btnLd" type="button" value="Load" onclick="loadAll();" />
+        <input id="btnSv" type="submit" value="Save" onclick="saveAll();" />
+        <input id="btnCl" type="button" value="Clear" onclick="clearAll();" />
+        <br /><br /><br />
+    <form id="frmSpreadsheet" onSubmit="return false;">
+        <div id="SpreadsheetTable">
+    </form>
+</body>
+</html>

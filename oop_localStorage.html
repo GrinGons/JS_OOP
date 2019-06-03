@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Local Storage</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  -->
+<style>
+   body { padding: 0; font: 1em "Courier", sans-serif; }
+   content { margin: 10%; }
+   table{ border-collapse: collapse; text-align: left; }
+   tr, td{ border: 0px solid #c7c7c7; height: 25px; }
+</style>
+<script type="text/javascript">
+
+   function $gel(id){ return document.getElementById(id); }
+
+   window.onload = function() {
+     var elems = document.getElementsByTagName("input");
+
+        $gel("_name").value = localStorage.getItem("_name");
+        $gel("_age").value = localStorage.getItem("_age");
+        $gel("_school").value = localStorage.getItem("_school");
+
+     for (var i = 0; i < elems.length; i++) {
+
+        if (elems[i].type === "text") {
+           var value = localStorage.getItem(elems[i].id);
+           if (value) {
+			  elems[i].value = value;
+		   }
+           elems[i].onchange = processField;
+        }
+     }
+
+     $gel("btnDel").onclick = clearStored;
+
+     $gel("btnSeeAll").addEventListener("click", function () {
+                var key, value;
+                for (var i = 0, len = localStorage.length; i < len; i++){
+                    key = localStorage.key(i);
+                    value = localStorage.getItem(key);
+                    //localStorage.removeItem(value);
+                    alert(key + "=" + value);
+                }
+            });
+   }
+                                          // store field values
+   function processField() {
+     localStorage.setItem(window.location.href, "true");
+     localStorage.setItem(this.id, this.value);
+   }
+                                          // clear individual fields
+   function clearStored() {
+    var elems = document.getElementsByTagName("input");
+
+     for (var i = 0; i < elems.length; i++) {
+
+       if (elems[i].type === "text") {
+          localStorage.removeItem(elems[i].id);
+          elems[i].value = "";
+       }
+     }
+   }
+
+</script>
+</head>
+<body>
+   <form id="inputform">
+      <table><tr><td> Name </td>
+         <td> <input type="text" id="_name" /></td></tr>
+      <tr><td> Age </td> 
+         <td> <input type="text" id="_age" /></td></tr>
+      <tr><td> School </td> 
+         <td> <input type="text" id="_school" /></td></tr>
+      </table><br>
+      <input type="button" value="See Storage" id="btnSeeAll" />
+      <input type="button" value="Delete Storage" id="btnDel" />
+   
+</body>
+

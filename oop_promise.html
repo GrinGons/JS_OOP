@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Kunho lab3</title>
+    <script>
+            var req = new XMLHttpRequest();
+            var lcboPrd = [];
+
+        function getLcbo(dPg){
+            var test = new Promise (function(resolve, reject) {
+                    req.open('GET', 'http://lcboapi.com/products?per_page=100?where=is_seasonal');
+                    req.onload = function () {
+                        if (req.readyState === 4 && req.status === 200) {
+                            var data = JSON.parse(req.responseText);
+                            var dPg = data.pager;
+
+                            if (!dPg.is_final_page && dPg.next_page < 6) {
+                                    resolve(data.result);
+                            }           
+                        }
+                        else { reject(req.statusText);
+                            var allJSON = JSON.stringify(lcboPrd); 
+                            }
+                    };
+                    req.onerror = function() { reject("network error"); };
+                    req.setRequestHeader("Authorization", "Token MDo5OWQ1OTE5ZS0wYWM2LTExZTgtOWQzNy05NzBhMmM5NGE3MGE6MDE5VlJxVkdtU2FHTkdaV0tkbTVSVHJha0ZaSmlva1AyOTlt");
+                    req.send();
+                }
+            ); return test;   
+        }
+        
+        getLcbo(1).then (	
+                function(result) { var data = JSON.parse(req.responseText);
+                            var dPg = data.pager;
+                        lcboPrd.push(result);
+                    document.getElementById("countDiv").innerHTML = 2;
+                    for (var i = 0; i < data.result.length; i++) {
+                        document.getElementById("namesDiv").innerHTML += data.result[i].name + ", ";
+                    }
+					return getLcbo(2); 
+				}, function(error) { alert(error); })   
+
+            .then (	
+                function(result) { var data = JSON.parse(req.responseText);
+                            var dPg = data.pager;
+                        lcboPrd.push(result);
+                    document.getElementById("countDiv").innerHTML = 3;
+                    for (var i = 0; i < data.result.length; i++) {
+                        document.getElementById("namesDiv").innerHTML += data.result[i].name + ", ";
+                    }
+					return getLcbo(3); 
+				}, function(error) { alert(error); })   
+
+            .then (	
+                function(result) { var data = JSON.parse(req.responseText);
+                            var dPg = data.pager;
+                        lcboPrd.push(result);
+                    document.getElementById("countDiv").innerHTML = 4;
+                    for (var i = 0; i < data.result.length; i++) {
+                        document.getElementById("namesDiv").innerHTML += data.result[i].name + ", ";
+                    }
+					return getLcbo(4); 
+				}, function(error) { alert(error); })   
+
+            .then (	
+                function(result) { var data = JSON.parse(req.responseText);
+                            var dPg = data.pager;
+                        lcboPrd.push(result);
+                    document.getElementById("countDiv").innerHTML = 5;
+                    for (var i = 0; i < data.result.length; i++) {
+                        document.getElementById("namesDiv").innerHTML += data.result[i].name + ", ";
+                    }
+					return getLcbo(5); 
+				}, function(error) { alert(error); });   
+
+	</script>
+</head>
+<body>
+        <input type="button" id="btnAsynch"  value="Get LCBO Product Data Asynchronously" onclick="getLcbo();"/>
+        <br /><br />
+		<div id="countDiv"></div>
+		<div id="namesDiv"></div>
+</body>
+</html>

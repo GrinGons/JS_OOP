@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Kunho_exer</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <style type="text/css">
+  body{
+    background:hsl(300, 100%, 100%);
+    padding:5px;
+  }
+  #d1{
+      background-image:url('https://www.50-best.com/images/mlb_team_wallpapers/baseball_mit_bat_wallpaper.jpg');
+      background-size: cover;
+      padding:15px; 
+      border:1px solid gray;
+      width: 480px;
+  }
+  #date{
+      padding:10px 0px 0px 20px; 
+      border:1px solid #999;
+      width:210px;
+      background-color: hsla(40,50%,90%,0.8);
+  }
+  .bx{
+      background:white;
+      border:1px solid #999;
+      height: 24px;
+  }
+  .selB{
+      width:80px;
+      margin-left: 10px;
+  }
+  .txtB{
+    width:250px;
+    position: absolute; left:200px;
+    color:black;
+    font-size: 13px;
+  }
+  .txtAl{
+    text-align: right;
+    padding-right:300px;
+    font-weight: bold; 
+    color: white;
+    text-shadow: 2px 1px 3px black;
+  }
+  .butt{
+    width: 120px;
+    color: white;
+  }
+</style>
+
+  <script type="text/javascript">
+       
+ 
+      var request = new XMLHttpRequest();
+      var mlbData = [];
+      var x=0;
+
+      function init(){
+          var getYs=[2015, 2016, 2017];
+          for (var i = 0; i < getYs.length; i++) {
+          document.getElementById("gY").options[i] = new Option(getYs[i]); }
+
+          for (var m = 0; m < 12; m++) {
+            var mon = m+1;
+          if(mon <10){
+            mon = "0" + mon; }
+          document.getElementById("gM").options[m] = new Option(mon); }
+
+          for (var d = 0; d < 31; d++) {
+            var ddd = d+1;
+          if(ddd <10){
+            ddd = "0" + ddd; }
+          document.getElementById("gD").options[d] = new Option(ddd); }
+      }
+
+    
+    function getJSONAsync(url, callback) {
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function () {
+        if (request.readyState === 4 && request.status === 200) {
+          callback(request.responseText);
+        }
+      };
+      request.open('GET', url);
+      request.send();
+    }
+
+    function myCallBack(baseballJson) {
+      
+      var jsObject = JSON.parse(baseballJson);
+
+      if (jsObject.data.games.game !== undefined) {
+            for (var i = 0; i < jsObject.data.games.game.length; i++) {
+              mlbData.push(jsObject.data.games.game[i]);
+            } 
+        document.getElementById('hName').value = mlbData[x].home_team_name;
+        document.getElementById('aName').value = mlbData[x].away_team_name; 
+        document.getElementById('wPitch').value = mlbData[x].winning_pitcher.first +" "+mlbData[x].winning_pitcher.last;
+        document.getElementById('lPitch').value = mlbData[x].losing_pitcher.first +" "+ mlbData[x].winning_pitcher.last;
+        document.getElementById('venIn').value = mlbData[x].venue;
+          }
+      else if(jsObject.data.games.game === undefined){
+        alert("It was too cold to play games");
+        document.getElementById('hName').value = "";
+        document.getElementById('aName').value = ""; 
+        document.getElementById('wPitch').value = "";
+        document.getElementById('lPitch').value = "";
+        document.getElementById('venIn').value = "";
+            }
+              else{var allJSON = JSON.stringify(mlbData); 
+            }
+      }
+
+    function retrieV() { 
+            var ref = document.getElementById("gY");
+            var listY = ref.options[ref.selectedIndex].text;
+            ref = document.getElementById("gM");
+            var listM = ref.options[ref.selectedIndex].text;
+            ref = document.getElementById("gD");
+            var listD = ref.options[ref.selectedIndex].text;
+
+      var tempURL = "http://gd2.mlb.com/components/game/mlb/year_"+listY+"/month_"+listM+"/day_"+listD+"/master_scoreboard.json";
+
+      getJSONAsync(tempURL, myCallBack);
+    }
+
+    function pGame(){
+      if(x > 0){
+      --x;
+      document.getElementById('hName').value = mlbData[x].home_team_name;
+      document.getElementById('aName').value = mlbData[x].away_team_name; 
+      document.getElementById('wPitch').value = mlbData[x].winning_pitcher.first +" "+mlbData[x].winning_pitcher.last;
+      document.getElementById('lPitch').value = mlbData[x].losing_pitcher.first +" "+ mlbData[x].winning_pitcher.last;
+      document.getElementById('venIn').value = mlbData[x].venue;
+      }
+      else{
+        x=0;
+        alert("This is first game"); } }
+    function nGame(){
+      if(x < mlbData.length){
+      ++x;
+      document.getElementById('hName').value = mlbData[x].home_team_name;
+      document.getElementById('aName').value = mlbData[x].away_team_name; 
+      document.getElementById('wPitch').value = mlbData[x].winning_pitcher.first +" "+mlbData[x].winning_pitcher.last;
+      document.getElementById('lPitch').value = mlbData[x].losing_pitcher.first +" "+ mlbData[x].winning_pitcher.last;
+      document.getElementById('venIn').value = mlbData[x].venue;
+      } else{
+        x=mlbData.length;
+        alert("This is last game"); } }
+
+
+    var isIE11 = ((window.navigator.userAgent).indexOf("Trident") !== -1);
+    var isChrome = ((window.navigator.userAgent).indexOf("Chrome") !== -1);
+    var isSafari = ((window.navigator.userAgent).indexOf("Safari") !== -1);
+
+    function filter() {
+      filterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ&-. ";
+      if (isIE11) {
+        if (!nCharOK(window.event.keyCode))
+          window.event.preventDefault(); 
+        alert("Only Letters and '& , - , .'are allowed");
+      } else {
+        if (!nCharOK(window.event.keyCode))
+          window.event.returnValue = null; 
+      } 
+    }
+    function nCharOK(c) {
+      var ch = (String.fromCharCode(c));  
+      ch = ch.toUpperCase();
+        
+      if (filterSet.indexOf(ch) !== -1) {
+        return true; 
+      }
+      else{
+        return false; 
+      } 
+    }
+    
+  </script>
+</head>
+
+<body onload="init();">
+  <div id="d1" class="panel panel-default">
+    <div id="date" class="panel panel-default">
+          <label>Year<select id="gY" class="panel panel-default selB bx"></select></label>
+          <label>Month<select id="gM" class="panel panel-default selB bx"></select></label>
+          <label>Day<select id="gD" class="panel panel-default selB bx"></select></label>
+    </div>
+  <input type="button" value="Retrieve" class="btn btn-warning btn-sm butt" style="position:absolute; top:25px; left:350px; width:100px;" onclick="retrieV();"/>
+
+  <form class="form-group">
+    <p class="txtAl">Home Team Name<input type="text" id="hName" class="panel panel-default input-lg txtB bx" onkeypress="filter()"></p>
+    <p class="txtAl">Away Team Name<input type="text" id="aName" class="panel panel-default input-lg txtB bx" onkeypress="filter()"></p>
+    <p class="txtAl">Winning Pitcher<input type="text" id="wPitch" class="panel panel-default input-lg txtB bx" onkeypress="filter()"></p>
+    <p class="txtAl">Losing Pitcher<input type="text" id="lPitch" class="panel panel-default input-lg txtB bx" onkeypress="filter()"></p>
+    <p class="txtAl">Venue<input type="text" id="venIn" class="panel panel-default input-lg txtB bx" onkeypress="filter()"></p>
+  </form><br/><br/>
+
+    <input type="button" value="Previous Game" class="btn btn-info btn-sm butt" onclick="pGame();"/>
+    <input type="button" value="next Game" class="btn btn-info btn-sm butt" onclick="nGame();"/>
+    <input type="button" id="sChan" value="Save Changes" onclick="saveChan();" class="btn btn-primary btn-sm butt" style="margin-left:55px"/>
+  </div>
+  <div id="jsonDiv"></div>
+</body>
+</html>
+  
